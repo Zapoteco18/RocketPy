@@ -2152,7 +2152,6 @@ class Flight:
 
         # Get the mass of the rocket
         mp = self.rocket.dry_mass
-
         # to = 1.2
         # eta = 1
         # Rdot = (6 * R * (1 - eta) / (1.2**6)) * (
