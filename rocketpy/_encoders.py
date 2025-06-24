@@ -36,7 +36,7 @@ class RocketPyEncoder(json.JSONEncoder):
             - discretize: bool, whether to discretize Functions whose source
               are callables. If True, the accuracy of the decoding may be reduced.
               Default is False.
-            - pickle_callables: bool, whether to pickle callable objects. If
+            - allow_pickle: bool, whether to pickle callable objects. If
               False, callable sources (such as user-defined functions, parachute
               triggers or simulation callable outputs) will have their name
               stored instead of the function itself. This is useful for
@@ -47,7 +47,7 @@ class RocketPyEncoder(json.JSONEncoder):
         self.include_outputs = kwargs.pop("include_outputs", False)
         self.include_function_data = kwargs.pop("include_function_data", True)
         self.discretize = kwargs.pop("discretize", False)
-        self.pickle_callables = kwargs.pop("pickle_callables", True)
+        self.allow_pickle = kwargs.pop("allow_pickle", True)
         super().__init__(*args, **kwargs)
 
     def default(self, o):
@@ -66,7 +66,7 @@ class RocketPyEncoder(json.JSONEncoder):
                 encoding = o.to_dict(
                     include_outputs=self.include_outputs,
                     discretize=self.discretize,
-                    pickle_callables=self.pickle_callables,
+                    allow_pickle=self.allow_pickle,
                 )
                 encoding["signature"] = get_class_signature(o)
                 return encoding
@@ -74,7 +74,7 @@ class RocketPyEncoder(json.JSONEncoder):
             encoding = o.to_dict(
                 include_outputs=self.include_outputs,
                 discretize=self.discretize,
-                pickle_callables=self.pickle_callables,
+                allow_pickle=self.allow_pickle,
             )
             encoding = remove_circular_references(encoding)
 

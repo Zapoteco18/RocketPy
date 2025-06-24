@@ -6,6 +6,8 @@ import pytest
 
 from rocketpy._encoders import RocketPyDecoder, RocketPyEncoder
 
+from rocketpy.tools import from_hex_decode
+
 
 @pytest.mark.parametrize(
     ["flight_name", "include_outputs"],
@@ -232,7 +234,7 @@ def test_rocket_encoder(rocket_name, request):
 
 @pytest.mark.parametrize("rocket_name", ["calisto_robust"])
 def test_encoder_discretize(rocket_name, request):
-    """Test encoding the total mass of``rocketpy.Rocket`` with
+    """Test encoding the total mass of ``rocketpy.Rocket`` with
     discretized encoding.
 
     Parameters
@@ -261,3 +263,22 @@ def test_encoder_discretize(rocket_name, request):
         atol=1e-1,
     )
     assert isinstance(mass_loaded.source, np.ndarray)
+
+
+@pytest.mark.parametrize("parachute_name", ["calisto_main_chute"])
+def test_encoder_no_pickle(parachute_name, request):
+    """Test encoding of a ``rocketpy.Parachute`` disallowing
+    pickle usage.
+    """
+    parachute_to_encode = request.getfixturevalue(parachute_name)
+
+    json_encoded = json.dumps(
+        parachute_to_encode,
+        cls=RocketPyEncoder,
+        allow_pickle=False,
+    )
+
+    trigger_loaded = json.loads(json_encoded)["trigger"]
+
+    with pytest.raises(ValueError, match=r"non-hexadecimal number found"):
+        from_hex_decode(trigger_loaded)

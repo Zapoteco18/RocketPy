@@ -3578,7 +3578,7 @@ class Function:  # pylint: disable=too-many-public-methods
         source = self.source
 
         if callable(source):
-            if kwargs.get("pickle_callables", True):
+            if kwargs.get("allow_pickle", True):
                 source = to_hex_encode(source)
             else:
                 source = source.__name__
