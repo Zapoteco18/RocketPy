@@ -191,7 +191,6 @@ class Parachute:
         self.sampling_rate = sampling_rate
         self.lag = lag
         self.noise = noise
-        self.porosity = porosity
         self.noise_signal = [[-1e-6, np.random.normal(noise[0], noise[1])]]
         self.noisy_pressure_signal = []
         self.clean_pressure_signal = []
