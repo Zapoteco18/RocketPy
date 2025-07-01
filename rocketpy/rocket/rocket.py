@@ -1549,7 +1549,7 @@ class Rocket:
             in [0, 1]. Affects only the added-mass scaling during descent; it does
             not change ``cd_s`` (drag). The default, 0.0432, yields an added-mass
             of 1.0 (“neutral” behavior).
-            
+
         Returns
         -------
         parachute : Parachute
