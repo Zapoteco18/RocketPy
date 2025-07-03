@@ -262,7 +262,6 @@ main = calisto.add_parachute(
     sampling_rate=105,
     lag=1.5,
     noise=(0, 8.3, 0.5),
-<<<<<<< HEAD
     radius=1.5,
     height=1.5,
     porosity=0.0432,
@@ -275,13 +274,8 @@ drogue = calisto.add_parachute(
     sampling_rate=105,
     lag=1.5,
     noise=(0, 8.3, 0.5),
-<<<<<<< HEAD
     radius=1.5,
     height=1.5,
-=======
-    parachute_radius=1.5,
-    parachute_height=1.5,
->>>>>>> 7defc38c (DOC: added new parameters to the documentation)
     porosity=0.0432,
 )
 ```
