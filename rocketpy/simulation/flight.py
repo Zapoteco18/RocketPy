@@ -2015,7 +2015,6 @@ class Flight:
         # tf = 8 * nominal diameter / velocity at line stretch
 
         # Calculate added mass
-<<<<<<< HEAD
         ma = (
             self.parachute_added_mass_coefficient
             * rho
@@ -2024,9 +2023,6 @@ class Flight:
             * self.parachute_radius**2
             * self.parachute_height
         )
-=======
-        ma = ka * rho * (4 / 3) * np.pi * self.parachute_radius**2 * self.parachute_height
->>>>>>> 159cce8e (ENH: implementing previous comments)
 
         # Calculate freestream speed
         freestream_x = vx - wind_velocity_x
