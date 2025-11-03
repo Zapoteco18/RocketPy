@@ -72,7 +72,7 @@ class _TankPlots:
         # Don't set any plot config here. Use the draw methods for that
         return tank
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draws the tank geometry.
 
         Parameters
@@ -87,7 +87,10 @@ class _TankPlots:
         -------
         None
         """
-        _, ax = plt.subplots(facecolor="#EEEEEE")
+        if vis_args is None:
+            vis_args = {}
+
+        _, ax = plt.subplots(facecolor=vis_args.get("background", "#EEEEEE"))
 
         ax.add_patch(self._generate_tank())
 

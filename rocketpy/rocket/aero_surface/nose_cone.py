@@ -485,7 +485,7 @@ class NoseCone(AeroSurface):
         self.cp = (self.cpx, self.cpy, self.cpz)
         return self.cp
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draw the nosecone shape along with some important information,
         including the center of pressure position.
 
@@ -501,7 +501,7 @@ class NoseCone(AeroSurface):
         -------
         None
         """
-        self.plots.draw(filename=filename)
+        self.plots.draw(vis_args=vis_args, filename=filename)
 
     def info(self):
         """Prints and plots summarized information of the nose cone.

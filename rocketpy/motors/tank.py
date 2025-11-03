@@ -591,7 +591,7 @@ class Tank(ABC):
     def _discretize_fluid_inputs(self):
         """Uniformly discretizes the parameter of inputs of fluid data ."""
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draws the tank geometry.
 
         Parameters
@@ -606,7 +606,7 @@ class Tank(ABC):
         -------
         None
         """
-        self.plots.draw(filename=filename)
+        self.plots.draw(vis_args=vis_args, filename=filename)
 
     def info(self):
         """Prints out a summary of the tank properties."""

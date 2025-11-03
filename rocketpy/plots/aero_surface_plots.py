@@ -25,7 +25,7 @@ class _AeroSurfacePlots(ABC):
         self.aero_surface = aero_surface
 
     @abstractmethod
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         pass
 
     def lift(self):
@@ -54,7 +54,7 @@ class _NoseConePlots(_AeroSurfacePlots):
     """Class that contains all nosecone plots. This class inherits from the
     _AeroSurfacePlots class."""
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draw the nosecone shape along with some important information,
         including the center line and the center of pressure position.
 
@@ -73,6 +73,9 @@ class _NoseConePlots(_AeroSurfacePlots):
         # Create the vectors X and Y with the points of the curve
         nosecone_x, nosecone_y = self.aero_surface.shape_vec
 
+        if vis_args is None:
+            vis_args = {}
+
         # Figure creation and set up
         _, ax = plt.subplots()
         ax.set_xlim(-0.05, self.aero_surface.length * 1.02)  # Horizontal size
@@ -80,7 +83,7 @@ class _NoseConePlots(_AeroSurfacePlots):
             -self.aero_surface.base_radius * 1.05, self.aero_surface.base_radius * 1.05
         )  # Vertical size
         ax.set_aspect("equal")  # Makes the graduation be the same on both axis
-        ax.set_facecolor("#EEEEEE")  # Background color
+        ax.set_facecolor(vis_args.get("background", "#EEEEEE"))  # Background color
         ax.grid(True, linestyle="--", linewidth=0.5)
 
         cp_plot = (self.aero_surface.cpz, 0)
@@ -140,7 +143,7 @@ class _FinsPlots(_AeroSurfacePlots):
     _AeroSurfacePlots class."""
 
     @abstractmethod
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         pass
 
     def airfoil(self):
@@ -201,7 +204,7 @@ class _TrapezoidalFinsPlots(_FinsPlots):
     """Class that contains all trapezoidal fin plots."""
 
     # pylint: disable=too-many-statements
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draw the fin shape along with some important information, including
         the center line, the quarter line and the center of pressure position.
 
@@ -291,10 +294,14 @@ class _TrapezoidalFinsPlots(_FinsPlots):
             label="Mean Aerodynamic Chord",
         )
 
+        if vis_args is None:
+            vis_args = {}
+
         # Plotting
         fig = plt.figure(figsize=(7, 4))
         with plt.style.context("bmh"):
             ax = fig.add_subplot(111)
+        fig.patch.set_facecolor(vis_args.get("background", "#EEEEEE"))
 
         # Fin
         ax.add_line(leading_edge)
@@ -330,7 +337,7 @@ class _EllipticalFinsPlots(_FinsPlots):
     """Class that contains all elliptical fin plots."""
 
     # pylint: disable=too-many-statements
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draw the fin shape along with some important information.
         These being: the center line and the center of pressure position.
 
@@ -383,10 +390,14 @@ class _EllipticalFinsPlots(_FinsPlots):
         # Center of pressure
         cp_point = [self.aero_surface.cpz, self.aero_surface.Yma]
 
+        if vis_args is None:
+            vis_args = {}
+
         # Plotting
         fig = plt.figure(figsize=(7, 4))
         with plt.style.context("bmh"):
             ax = fig.add_subplot(111)
+        fig.patch.set_facecolor(vis_args.get("background", "#EEEEEE"))
         ax.add_patch(ellipse)
         ax.add_line(yma_line)
         ax.add_line(center_line)
@@ -409,7 +420,7 @@ class _FreeFormFinsPlots(_FinsPlots):
     """Class that contains all free form fin plots."""
 
     # pylint: disable=too-many-statements
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draw the fin shape along with some important information.
         These being: the center line and the center of pressure position.
 
@@ -443,10 +454,14 @@ class _FreeFormFinsPlots(_FinsPlots):
             label="Mean Aerodynamic Chord",
         )
 
+        if vis_args is None:
+            vis_args = {}
+
         # Plotting
         fig = plt.figure(figsize=(7, 4))
         with plt.style.context("bmh"):
             ax = fig.add_subplot(111)
+        fig.patch.set_facecolor(vis_args.get("background", "#EEEEEE"))
 
         # Fin
         ax.scatter(
@@ -483,7 +498,7 @@ class _FreeFormFinsPlots(_FinsPlots):
 class _TailPlots(_AeroSurfacePlots):
     """Class that contains all tail plots."""
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         # This will de done in the future
         pass
 
@@ -498,7 +513,7 @@ class _AirBrakesPlots(_AeroSurfacePlots):
         else:
             return self.aero_surface.drag_coefficient.plot()
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         raise NotImplementedError
 
     def all(self):
@@ -514,12 +529,12 @@ class _AirBrakesPlots(_AeroSurfacePlots):
 class _GenericSurfacePlots(_AeroSurfacePlots):
     """Class that contains all generic surface plots."""
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         pass
 
 
 class _LinearGenericSurfacePlots(_AeroSurfacePlots):
     """Class that contains all linear generic surface plots."""
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         pass

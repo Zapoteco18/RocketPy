@@ -748,7 +748,7 @@ class SolidMotor(Motor):
     def propellant_I_23(self):
         return 0
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draw a representation of the SolidMotor.
 
         Parameters
@@ -763,7 +763,7 @@ class SolidMotor(Motor):
         -------
         None
         """
-        self.plots.draw(filename=filename)
+        self.plots.draw(vis_args=vis_args, filename=filename)
 
     def to_dict(self, **kwargs):
         data = super().to_dict(**kwargs)

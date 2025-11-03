@@ -144,7 +144,7 @@ class _HybridMotorPlots(_MotorPlots):
             lower=lower_limit, upper=upper_limit, filename=filename
         )
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draw a representation of the HybridMotor.
 
         Parameters
@@ -159,7 +159,12 @@ class _HybridMotorPlots(_MotorPlots):
         -------
         None
         """
-        _, ax = plt.subplots(figsize=(8, 6), facecolor="#EEEEEE")
+        if vis_args is None:
+            vis_args = {}
+
+        _, ax = plt.subplots(
+            figsize=(8, 6), facecolor=vis_args.get("background", "#EEEEEE")
+        )
 
         tanks_and_centers = self._generate_positioned_tanks(csys=self.motor._csys)
         nozzle = self._generate_nozzle(

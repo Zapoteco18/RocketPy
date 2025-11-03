@@ -468,7 +468,7 @@ class Fins(AeroSurface):
 
         return data
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draw the fin shape along with some important information, including
         the center line, the quarter line and the center of pressure position.
 
@@ -484,4 +484,4 @@ class Fins(AeroSurface):
         -------
         None
         """
-        self.plots.draw(filename=filename)
+        self.plots.draw(vis_args=vis_args, filename=filename)

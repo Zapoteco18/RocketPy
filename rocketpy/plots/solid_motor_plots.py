@@ -113,11 +113,28 @@ class _SolidMotorPlots(_MotorPlots):
 
         self.motor.Kn.plot(lower=lower_limit, upper=upper_limit)
 
-    def draw(self, *, filename=None):
+    def draw(self, vis_args=None, *, filename=None):
         """Draw a representation of the SolidMotor.
 
         Parameters
         ----------
+        vis_args : dict, optional
+            Determines the visual aspects when drawing the solid motor. If
+            ``None``, default values are used. Default values are:
+
+            {
+                "background": "#EEEEEE",
+                "tail": "black",
+                "nose": "black",
+                "body": "black",
+                "fins": "black",
+                "motor": "black",
+                "buttons": "black",
+                "line_width": 2.0,
+            }
+
+            A full list of color names can be found at:
+            https://matplotlib.org/stable/gallery/color/named_colors
         filename : str | None, optional
             The path the plot should be saved to. By default None, in which case
             the plot will be shown instead of saved. Supported file endings are:
@@ -128,7 +145,19 @@ class _SolidMotorPlots(_MotorPlots):
         -------
         None
         """
-        _, ax = plt.subplots(figsize=(8, 6), facecolor="#EEEEEE")
+        if vis_args is None:
+            vis_args = {
+                "background": "#EEEEEE",
+                "tail": "black",
+                "nose": "black",
+                "body": "black",
+                "fins": "black",
+                "motor": "black",
+                "buttons": "black",
+                "line_width": 2.0,
+            }
+
+        _, ax = plt.subplots(figsize=(8, 6), facecolor=vis_args["background"])
 
         nozzle = self._generate_nozzle(
             translate=(self.motor.nozzle_position, 0), csys=self.motor._csys
