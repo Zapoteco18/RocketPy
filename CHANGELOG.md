@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 Attention: The newest changes should be on top -->
 
 ### Added
+
+- ENH: Add axial_acceleration attribute to the Flight class [#876](https://github.com/RocketPy-Team/RocketPy/pull/876)
 - ENH: Rail button bending moments calculation in Flight class [#893](https://github.com/RocketPy-Team/RocketPy/pull/893)
 - ENH: Built-in flight comparison tool (`FlightComparator`) to validate simulations against external data [#888](https://github.com/RocketPy-Team/RocketPy/pull/888)
 - ENH: Add persistent caching for ThrustCurve API [#881](https://github.com/RocketPy-Team/RocketPy/pull/881)
