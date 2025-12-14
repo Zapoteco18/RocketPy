@@ -2773,10 +2773,10 @@ class Flight:
         # Getting time step
         self.t0 = getattr(self, "t0", t)
         t1 = t
-        Dt = t1 - self.t0
+        dt = t1 - self.t0
 
         # Integrating parachute volume
-        self.parachute_volume += volume_flow * Dt
+        self.parachute_volume += volume_flow * dt
 
         # Dragged air mass
         ma = self.parachute_volume * rho
