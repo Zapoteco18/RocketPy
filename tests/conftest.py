@@ -1,6 +1,6 @@
+import matplotlib
 import netCDF4
 import numpy as np
-import matplotlib
 import pytest
 
 # Configure matplotlib to use non-interactive backend for tests
@@ -76,6 +76,7 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(skip_slow)
 
 
+# TODO: move this to Environment fixtures when possible
 @pytest.fixture
 def merra2_file_path(tmp_path):  # pylint: disable=too-many-statements
     """
