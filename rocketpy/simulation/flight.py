@@ -769,12 +769,10 @@ class Flight:
                             lambda self, parachute_cd_s=parachute.cd_s: setattr(
                                 self, "parachute_cd_s", parachute_cd_s
                             ),
-                            lambda self,
-                            parachute_radius=parachute.radius: setattr(
+                            lambda self, parachute_radius=parachute.radius: setattr(
                                 self, "parachute_radius", parachute_radius
                             ),
-                            lambda self,
-                            parachute_height=parachute.height: setattr(
+                            lambda self, parachute_height=parachute.height: setattr(
                                 self, "parachute_height", parachute_height
                             ),
                             lambda self, parachute_porosity=parachute.porosity: setattr(
@@ -786,6 +784,21 @@ class Flight:
                                 "parachute_added_mass_coefficient",
                                 added_mass_coefficient,
                             ),
+                            lambda self: setattr(
+                                self,
+                                "parachute_volume",
+                                (4 / 3)
+                                * math.pi
+                                * (self.parachute_height / self.parachute_radius)
+                                * (
+                                    min(
+                                        self.parachute_radius,
+                                        self.rocket.radius,
+                                    )
+                                )
+                                * 3,
+                            ),
+                            lambda self: delattr(self, "t0"),
                         ]
                         self.flight_phases.add_phase(
                             node.t + parachute.lag,
@@ -1056,6 +1069,24 @@ class Flight:
                                                 "parachute_added_mass_coefficient",
                                                 added_mass_coefficient,
                                             ),
+                                            lambda self: setattr(
+                                                self,
+                                                "parachute_volume",
+                                                (4 / 3)
+                                                * math.pi
+                                                * (
+                                                    self.parachute_height
+                                                    / self.parachute_radius
+                                                )
+                                                * (
+                                                    min(
+                                                        self.parachute_radius,
+                                                        self.rocket.radius,
+                                                    )
+                                                )
+                                                * 3,
+                                            ),
+                                            lambda self: delattr(self, "t0"),
                                         ]
                                         self.flight_phases.add_phase(
                                             overshootable_node.t + parachute.lag,
@@ -2154,24 +2185,6 @@ class Flight:
 
         # Get the mass of the rocket
         mp = self.rocket.dry_mass
-        # to = 1.2
-        # eta = 1
-        # Rdot = (6 * R * (1 - eta) / (1.2**6)) * (
-        #     (1 - eta) * t**5 + eta * (to**3) * (t**2)
-        # )
-        # Rdot = 0
-
-        # tf = 8 * nominal diameter / velocity at line stretch
-
-        # Calculate added mass
-        # ma = (
-        #     self.parachute_added_mass_coefficient
-        #     * rho
-        #     * (2 / 3)
-        #     * np.pi
-        #     * self.parachute_radius**2
-        #     * self.parachute_height
-        # )
 
         # Calculate freestream speed
         freestream_x = vx - wind_velocity_x
@@ -2179,42 +2192,51 @@ class Flight:
         freestream_z = vz
         free_stream_speed = (freestream_x**2 + freestream_y**2 + freestream_z**2) ** 0.5
 
-        # Initialize parachute state parameters if necessary (wouldn't work for more than one parachute)
-        self.parachute_inflated_radius = getattr(
-            self, "parachute_inflated_radius", self.rocket.radius
-        )
-        self.volume = getattr(self, "volume", 0)
-
+        # Initialize parachute geometrical parameters
         radius = self.parachute_radius
         height = self.parachute_height
-        inflated_radius = self.parachute_inflated_radius
+        inflated_radius = (
+            (3 * self.parachute_volume * radius) / (4 * math.pi * height)
+        ) ** (1 / 3)
         inflated_height = inflated_radius * height / radius
 
         # Calculate the surface area of the parachute
         if radius > height:
             e = math.sqrt(1 - (inflated_height**2) / (inflated_radius**2))
-            surface_area = math.pi * inflated_radius**2 * (1 + (1 - e**2) / e * math.atanh(e))
+            surface_area = (
+                math.pi * inflated_radius**2 * (1 + (1 - e**2) / e * math.atanh(e))
+            )
         else:
             e = math.sqrt(1 - (inflated_radius**2) / (inflated_height**2))
             surface_area = (
-                math.pi * inflated_radius**2 * (1 + inflated_height / (e * inflated_radius) * math.asin(e))
+                math.pi
+                * inflated_radius**2
+                * (1 + inflated_height / (e * inflated_radius) * math.asin(e))
             )
 
+        # Calculate volume flow of air into parachute
         volume_flow = (
             rho
-            * freestream_z # considering parachute as vertical
+            * freestream_z  # considering parachute as vertical
             * (
                 (math.pi * inflated_radius**2)
                 - (self.parachute_porosity * surface_area)
             )
         )
-        self.volume += volume_flow  # * time_step
-        self.inflated_radius = ((3 * self.volume * radius) / (4 * math.pi * height)) ** (
-            1 / 3
-        )
+
+        # Getting time step
+        self.t0 = getattr(self, "t0", t)
+        t1 = t
+        Dt = t1 - self.t0
+
+        # Integrating parachute volume
+        self.parachute_volume += volume_flow * Dt
 
         # Dragged air mass
-        ma = self.volume * rho
+        ma = self.parachute_volume * rho
+
+        # Moving time step
+        self.t0 = t1
 
         # Determine drag force
         pseudo_drag = -0.5 * rho * self.parachute_cd_s * free_stream_speed
