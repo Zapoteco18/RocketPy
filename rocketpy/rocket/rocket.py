@@ -384,6 +384,35 @@ class Rocket:
         self.prints = _RocketPrints(self)
         self.plots = _RocketPlots(self)
 
+    def _check_missing_components(self):
+        """Check if the rocket is missing any essential components and issue a warning.
+
+        This method verifies whether the rocket has the following key components:
+        - motor
+        - aerodynamic surface(s)
+
+        If any of these components are missing, a single warning message is issued
+        listing all missing components. This helps users quickly identify potential
+        issues before running simulations or analyses.
+
+        Notes
+        -----
+        - The warning uses Python's built-in `warnings.warn` function.
+
+        Returns
+        -------
+        None
+        """
+        missing_components = []
+        if isinstance(self.motor, EmptyMotor):
+            missing_components.append("motor")
+        if not self.aerodynamic_surfaces:
+            missing_components.append("aerodynamic surfaces")
+
+        if missing_components:
+            component_list = ", ".join(missing_components)
+            warnings.warn(f"Rocket has no {component_list} defined.", UserWarning)
+
     @property
     def nosecones(self):
         """A list containing all the nose cones currently added to the rocket."""
@@ -1638,12 +1667,11 @@ class Rocket:
             6. `interactive_objects` (list): A list containing the objects that
                the controller function can interact with. The objects are
                listed in the same order as they are provided in the
-               `interactive_objects`
+               `interactive_objects` argument.
             7. `sensors` (list): A list of sensors that are attached to the
-                rocket. The most recent measurements of the sensors are provided
-                with the ``sensor.measurement`` attribute. The sensors are
-                listed in the same order as they are added to the rocket
-               ``interactive_objects``
+               rocket. The most recent measurements of the sensors are provided
+               with the ``sensor.measurement`` attribute. The sensors are
+               listed in the same order as they are added to the rocket.
 
             This function will be called during the simulation at the specified
             sampling rate. The function should evaluate and change the observed

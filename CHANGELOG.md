@@ -32,6 +32,27 @@ Attention: The newest changes should be on top -->
 
 ### Added
 
+- ENH: Add save functionality to `_MonteCarloPlots.all` method [#848](https://github.com/RocketPy-Team/RocketPy/pull/848)
+- ENH: Add persistent caching for ThrustCurve API [#881](https://github.com/RocketPy-Team/RocketPy/pull/881)
+- ENH: Compatibility with MERRA-2 atmosphere reanalysis files [#825](https://github.com/RocketPy-Team/RocketPy/pull/825)
+- ENH: Enable only radial burning [#815](https://github.com/RocketPy-Team/RocketPy/pull/815)
+- ENH: Add thrustcurve api integration to retrieve motor eng data [#870](https://github.com/RocketPy-Team/RocketPy/pull/870)
+- ENH: custom warning no motor or aerosurface [#871](https://github.com/RocketPy-Team/RocketPy/pull/871)
+
+### Changed
+
+-
+
+### Fixed
+
+- BUG: Fix parallel Monte Carlo simulation showing incorrect iteration count [#806](https://github.com/RocketPy-Team/RocketPy/pull/806)
+- BUG: Fix CSV column header spacing in FlightDataExporter [#864](https://github.com/RocketPy-Team/RocketPy/issues/864)
+
+
+## [v1.11.0] - 2025-11-01
+
+### Added
+
 - ENH: Tank Fluids with Variable Density from Temperature and Pressure [#852](https://github.com/RocketPy-Team/RocketPy/pull/852)
 - ENH: Controller (AirBrakes) and Sensors Encoding [#849](https://github.com/RocketPy-Team/RocketPy/pull/849)
 - EHN: Addition of ensemble variable to ECMWF dictionaries [#842](https://github.com/RocketPy-Team/RocketPy/pull/842)
@@ -44,6 +65,7 @@ Attention: The newest changes should be on top -->
 
 ### Changed
 
+- REL: bumps up rocketpy version to 1.11.0 [#868](https://github.com/RocketPy-Team/RocketPy/pull/868)
 - MNT: allow for exporting of non apogee flights. [#863](https://github.com/RocketPy-Team/RocketPy/pull/863)
 - TST: remove remaining files after test session. [#862](https://github.com/RocketPy-Team/RocketPy/pull/862)
 - MNT: bumps min python version to 3.10 [#857](https://github.com/RocketPy-Team/RocketPy/pull/857)
@@ -61,6 +83,7 @@ Attention: The newest changes should be on top -->
 ## [v1.10.0] - 2025-05-16
 
 ### Added
+
 - ENH: Support for ND arithmetic in Function class. [#810] (https://github.com/RocketPy-Team/RocketPy/pull/810)
 - ENH: allow users to provide custom samplers [#803](https://github.com/RocketPy-Team/RocketPy/pull/803)
 - ENH: Implement Multivariate Rejection Sampling (MRS) [#738] (https://github.com/RocketPy-Team/RocketPy/pull/738)
