@@ -1002,6 +1002,21 @@ class Flight:
                     "parachute_added_mass_coefficient",
                     added_mass_coefficient,
                 ),
+                lambda self: setattr(
+                    self,
+                    "parachute_volume",
+                    (4 / 3)
+                    * math.pi
+                    * (self.parachute_height / self.parachute_radius)
+                    * (
+                        min(
+                            self.parachute_radius,
+                            self.rocket.radius,
+                        )
+                    )
+                    * 3,
+                ),
+                lambda self: delattr(self, "t0"),
             ]
             self.flight_phases.add_phase(
                 node.t + parachute.lag,
