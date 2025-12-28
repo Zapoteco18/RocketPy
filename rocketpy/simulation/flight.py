@@ -765,19 +765,11 @@ class Flight:
                                 "parachute_added_mass_coefficient",
                                 added_mass_coefficient,
                             ),
-                            lambda self: setattr(
+                            lambda self,
+                            initial_volume=parachute.initial_volume: setattr(
                                 self,
                                 "parachute_volume",
-                                (4 / 3)
-                                * math.pi
-                                * (self.parachute_height / self.parachute_radius)
-                                * (
-                                    min(
-                                        self.parachute_radius,
-                                        self.rocket.radius,
-                                    )
-                                )
-                                ** 3,
+                                initial_volume,
                             ),
                             lambda self: delattr(self, "__t0")
                             if hasattr(self, "__t0")
@@ -1004,19 +996,10 @@ class Flight:
                     "parachute_added_mass_coefficient",
                     added_mass_coefficient,
                 ),
-                lambda self: setattr(
+                lambda self, initial_volume=parachute.initial_volume: setattr(
                     self,
                     "parachute_volume",
-                    (4 / 3)
-                    * math.pi
-                    * (self.parachute_height / self.parachute_radius)
-                    * (
-                        min(
-                            self.parachute_radius,
-                            self.rocket.radius,
-                        )
-                    )
-                    ** 3,
+                    initial_volume,
                 ),
                 lambda self: delattr(self, "__t0") if hasattr(self, "__t0") else None,
             ]
@@ -2742,9 +2725,12 @@ class Flight:
 
         # Initialize parachute geometrical parameters
         inflated_radius = (
-            (3 * self.parachute_volume * self.parachute_radius) / (4 * math.pi * self.parachute_height)
+            (3 * self.parachute_volume * self.parachute_radius)
+            / (4 * math.pi * self.parachute_height)
         ) ** (1 / 3)
-        inflated_height = inflated_radius * self.parachute_height / self.parachute_radius
+        inflated_height = (
+            inflated_radius * self.parachute_height / self.parachute_radius
+        )
 
         # Calculate the surface area of the parachute
         if self.parachute_radius > self.parachute_height:

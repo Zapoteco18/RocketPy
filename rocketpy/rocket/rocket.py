@@ -1485,6 +1485,7 @@ class Rocket:
         noise=(0, 0, 0),
         radius=1.5,
         height=None,
+        initial_radius=None,
         porosity=0.0432,
     ):
         """Creates a new parachute, storing its parameters such as
@@ -1552,6 +1553,9 @@ class Rocket:
             Length of the unique semi-axis (height) of the inflated hemispheroid
             parachute. Default value is the radius of the parachute.
             Units are in meters.
+        initial_radius : float, optional
+            Initial radius of the parachute on deployment in meters. Used to model the
+            parachute inflation. Default value is the parachute radius (no inflation).
         porosity : float, optional
             Geometric porosity of the canopy (ratio of open area to total canopy area),
             in [0, 1]. Affects only the added-mass scaling during descent; it does
@@ -1567,15 +1571,16 @@ class Rocket:
             Flight simulation.
         """
         parachute = Parachute(
-            name,
-            cd_s,
-            trigger,
-            sampling_rate,
-            lag,
-            noise,
-            radius,
-            height,
-            porosity,
+            name=name,
+            cd_s=cd_s,
+            trigger=trigger,
+            sampling_rate=sampling_rate,
+            lag=lag,
+            noise=noise,
+            radius=radius,
+            height=height,
+            initial_radius=initial_radius,
+            porosity=porosity,
         )
         self.parachutes.append(parachute)
         return self.parachutes[-1]

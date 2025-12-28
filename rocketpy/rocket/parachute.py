@@ -1,5 +1,6 @@
 from inspect import signature
 
+import math
 import numpy as np
 
 from rocketpy.tools import from_hex_decode, to_hex_encode
@@ -98,6 +99,9 @@ class Parachute:
     Parachute.height : float, None
         Length of the unique semi-axis (height) of the inflated hemispheroid
         parachute in meters.
+    Parachute.initial_radius : float, None
+        Initial radius of the parachute on deployment in meters. Used to model the
+        parachute inflation.
     Parachute.porosity : float
         Geometric porosity of the canopy (ratio of open area to total canopy area),
         in [0, 1]. Affects only the added-mass scaling during descent; it does
@@ -118,6 +122,7 @@ class Parachute:
         noise=(0, 0, 0),
         radius=1.5,
         height=None,
+        initial_radius=None,
         porosity=0.0432,
     ):
         """Initializes Parachute class.
@@ -179,6 +184,9 @@ class Parachute:
             Length of the unique semi-axis (height) of the inflated hemispheroid
             parachute. Default value is the radius of the parachute.
             Units are in meters.
+        initial_radius : float, optional
+            Initial radius of the parachute on deployment in meters. Used to model the
+            parachute inflation. Default value is the parachute radius (no inflation).
         porosity : float, optional
             Geometric porosity of the canopy (ratio of open area to total canopy area),
             in [0, 1]. Affects only the added-mass scaling during descent; it does
@@ -202,6 +210,13 @@ class Parachute:
         self.noise_signal_function = Function(0)
         self.radius = radius
         self.height = height or radius
+        self.initial_radius = initial_radius or radius
+        self.initial_volume = (
+            (4 / 3)
+            * math.pi
+            * (self.parachute_height / self.parachute_radius)
+            * (min(self.parachute_radius, self.rocket.radius)) ** 3
+        )
         self.porosity = porosity
         self.added_mass_coefficient = 1.068 * (
             1
@@ -308,6 +323,7 @@ class Parachute:
             "noise": self.noise,
             "radius": self.radius,
             "height": self.height,
+            "initial_radius": self.initial_radius,
             "porosity": self.porosity,
         }
 
@@ -341,6 +357,7 @@ class Parachute:
             noise=data["noise"],
             radius=data.get("radius", 1.5),
             height=data.get("height", None),
+            initial_radius=data.get("initial_radius", None),
             porosity=data.get("porosity", 0.0432),
         )
 
