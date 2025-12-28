@@ -777,7 +777,7 @@ class Flight:
                                         self.rocket.radius,
                                     )
                                 )
-                                * 3,
+                                ** 3,
                             ),
                             lambda self: delattr(self, "t0"),
                         ]
@@ -1014,7 +1014,7 @@ class Flight:
                             self.rocket.radius,
                         )
                     )
-                    * 3,
+                    ** 3,
                 ),
                 lambda self: delattr(self, "t0"),
             ]
@@ -2739,15 +2739,13 @@ class Flight:
         free_stream_speed = (freestream_x**2 + freestream_y**2 + freestream_z**2) ** 0.5
 
         # Initialize parachute geometrical parameters
-        radius = self.parachute_radius
-        height = self.parachute_height
         inflated_radius = (
-            (3 * self.parachute_volume * radius) / (4 * math.pi * height)
+            (3 * self.parachute_volume * self.parachute_radius) / (4 * math.pi * self.parachute_height)
         ) ** (1 / 3)
-        inflated_height = inflated_radius * height / radius
+        inflated_height = inflated_radius * self.parachute_height / self.parachute_radius
 
         # Calculate the surface area of the parachute
-        if radius > height:
+        if self.parachute_radius > self.parachute_height:
             e = math.sqrt(1 - (inflated_height**2) / (inflated_radius**2))
             surface_area = (
                 math.pi * inflated_radius**2 * (1 + (1 - e**2) / e * math.atanh(e))
@@ -2762,8 +2760,7 @@ class Flight:
 
         # Calculate volume flow of air into parachute
         volume_flow = (
-            rho
-            * freestream_z  # considering parachute as vertical
+            freestream_z  # considering parachute as vertical
             * (
                 (math.pi * inflated_radius**2)
                 - (self.parachute_porosity * surface_area)
@@ -2771,9 +2768,9 @@ class Flight:
         )
 
         # Getting time step
-        self.t0 = getattr(self, "t0", t)
+        self.__t0 = getattr(self, "t0", t)
         t1 = t
-        dt = t1 - self.t0
+        dt = t1 - self.__t0
 
         # Integrating parachute volume
         self.parachute_volume += volume_flow * dt
@@ -2782,7 +2779,7 @@ class Flight:
         ma = self.parachute_volume * rho
 
         # Moving time step
-        self.t0 = t1
+        self.__t0 = t1
 
         # Determine drag force
         pseudo_drag = -0.5 * rho * self.parachute_cd_s * free_stream_speed
