@@ -779,7 +779,9 @@ class Flight:
                                 )
                                 ** 3,
                             ),
-                            lambda self: delattr(self, "t0"),
+                            lambda self: delattr(self, "__t0")
+                            if hasattr(self, "__t0")
+                            else None,
                         ]
                         self.flight_phases.add_phase(
                             node.t + parachute.lag,
@@ -1016,7 +1018,7 @@ class Flight:
                     )
                     ** 3,
                 ),
-                lambda self: delattr(self, "t0"),
+                lambda self: delattr(self, "__t0") if hasattr(self, "__t0") else None,
             ]
             self.flight_phases.add_phase(
                 node.t + parachute.lag,
