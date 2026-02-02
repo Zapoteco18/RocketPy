@@ -212,7 +212,7 @@ class Parachute:
         self.height = height or radius
         self.initial_radius = initial_radius or radius
         self.initial_volume = (
-            (4 / 3) * math.pi * (self.height / self.radius) * self.initial_radius**3
+            (2 / 3) * math.pi * (self.height / self.radius) * self.initial_radius**3
         )
         self.porosity = porosity
         self.added_mass_coefficient = 1.068 * (

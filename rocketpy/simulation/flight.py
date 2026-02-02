@@ -2732,7 +2732,7 @@ class Flight:
         # Initialize parachute geometrical parameters
         inflated_radius = min(self.parachute_radius, (
             (3 * self.parachute_volume * self.parachute_radius)
-            / (4 * math.pi * self.parachute_height)
+            / (2 * math.pi * self.parachute_height)
         ) ** (1 / 3))
         inflated_height = (
             inflated_radius * self.parachute_height / self.parachute_radius
@@ -2740,7 +2740,7 @@ class Flight:
 
         # Calculate the surface area of the parachute
         if self.parachute_radius == self.parachute_height:
-            surface_area = math.pi * inflated_radius**2 * 4
+            surface_area = math.pi * inflated_radius**2 * 2
         elif self.parachute_radius > self.parachute_height:
             e = math.sqrt(1 - (inflated_height**2) / (inflated_radius**2))
             surface_area = (
@@ -2769,7 +2769,7 @@ class Flight:
         dt = t1 - self.__t0
 
         # Integrating parachute volume
-        max_volume = (4 / 3) * math.pi * self.parachute_radius**2 * self.parachute_height
+        max_volume = (2 / 3) * math.pi * self.parachute_radius**2 * self.parachute_height
         self.parachute_volume = min(self.parachute_volume + volume_flow * dt, max_volume)
 
         # Dragged air mass
