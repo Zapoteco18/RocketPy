@@ -221,10 +221,9 @@ class Parachute:
             - 0.25975 * self.porosity**2
             + 1.2626 * self.porosity**3
         )
-        alpha, beta = self.noise_corr
-        self.noise_function = lambda: alpha * self.noise_signal[-1][
+        self.noise_function = lambda: self.noise_corr[0] * self.noise_signal[-1][
             1
-        ] + beta * np.random.normal(noise[0], noise[1])
+        ] + self.noise_corr[1] * np.random.normal(noise[0], noise[1])
 
         self.prints = _ParachutePrints(self)
 
