@@ -47,6 +47,7 @@ class StochasticParachute(StochasticModel):
         noise=None,
         radius=None,
         height=None,
+        initial_radius=None,
         porosity=None,
     ):
         """Initializes the Stochastic Parachute class.
@@ -76,6 +77,8 @@ class StochasticParachute(StochasticModel):
             Radius of the parachute in meters.
         height : tuple, list, int, float
             Height of the parachute in meters.
+        initial_radius : tuple, list, int, float
+            Initial radius of the parachute on deployment in meters.
         porosity : tuple, list, int, float
             Porosity of the parachute.
         """
@@ -87,6 +90,7 @@ class StochasticParachute(StochasticModel):
         self.noise = noise
         self.radius = radius
         self.height = height
+        self.initial_radius = initial_radius
         self.porosity = porosity
 
         self._validate_trigger(trigger)
@@ -101,6 +105,7 @@ class StochasticParachute(StochasticModel):
             name=None,
             radius=radius,
             height=height,
+            initial_radius=initial_radius,
             porosity=porosity,
         )
 
