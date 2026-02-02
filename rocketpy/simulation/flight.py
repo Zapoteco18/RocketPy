@@ -1408,6 +1408,12 @@ class Flight:
                     "parachute_added_mass_coefficient",
                     added_mass_coefficient,
                 ),
+                lambda self, initial_volume=parachute.initial_volume: setattr(
+                    self,
+                    "parachute_volume",
+                    initial_volume,
+                ),
+                lambda self: delattr(self, "__t0") if hasattr(self, "__t0") else None,
             ]
             self.flight_phases.add_phase(
                 overshootable_node.t + parachute.lag,
@@ -2724,16 +2730,18 @@ class Flight:
         free_stream_speed = (freestream_x**2 + freestream_y**2 + freestream_z**2) ** 0.5
 
         # Initialize parachute geometrical parameters
-        inflated_radius = (
+        inflated_radius = min(self.parachute_radius, (
             (3 * self.parachute_volume * self.parachute_radius)
             / (4 * math.pi * self.parachute_height)
-        ) ** (1 / 3)
+        ) ** (1 / 3))
         inflated_height = (
             inflated_radius * self.parachute_height / self.parachute_radius
         )
 
         # Calculate the surface area of the parachute
-        if self.parachute_radius > self.parachute_height:
+        if self.parachute_radius == self.parachute_height:
+            surface_area = math.pi * inflated_radius**2 * 4
+        elif self.parachute_radius > self.parachute_height:
             e = math.sqrt(1 - (inflated_height**2) / (inflated_radius**2))
             surface_area = (
                 math.pi * inflated_radius**2 * (1 + (1 - e**2) / e * math.atanh(e))
@@ -2761,7 +2769,8 @@ class Flight:
         dt = t1 - self.__t0
 
         # Integrating parachute volume
-        self.parachute_volume += volume_flow * dt
+        max_volume = (4 / 3) * math.pi * self.parachute_radius**2 * self.parachute_height
+        self.parachute_volume = min(self.parachute_volume + volume_flow * dt, max_volume)
 
         # Dragged air mass
         ma = self.parachute_volume * rho
